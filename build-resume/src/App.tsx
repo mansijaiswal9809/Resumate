@@ -4,14 +4,16 @@ import Header from "./components/Header"
 // import Testimonials from "./components/Testimonial"
 // import HeroCTA from "./components/HeroCTA"
 import Footer from "./components/Footer"
+import PersonalInformation from "./components/PersonalInformation"
 // import ResumeActions from "./components/ResumeAction"
-import ResumeLandingPage from "./components/ResumeAction"
+// import ResumeLandingPage from "./components/ResumeAction"
 
 const App = () => {
   return (
     <div>
       <Header/>
-      <ResumeLandingPage/>
+      <PersonalInformation/>
+      {/* <ResumeLandingPage/> */}
       {/* <Hero/>
       <Features/>
       <Testimonials/>
