@@ -1,13 +1,58 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSelector, useDispatch } from "react-redux";
+import { clearUser, fetchUser } from "../store/userSlice";
 import LoginRegisterModal from "./Login"; // make sure path is correct
+import type { AppDispatch, RootState } from "../store/store";
+import axios from "axios";
 
-const navItems = ["Home", "Features", "Testimonials", "Contact"];
+const navItems = [
+  { name: "Home", id: "home" },
+  { name: "Features", id: "feature" },
+  { name: "Testimonials", id: "testimonial" },
+  { name: "Contact", id: "footer" },
+];
 
 const Header = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate= useNavigate()
+  const user = useSelector((state: RootState) => state.user.user); // Redux user
   const [isOpen, setIsOpen] = useState(false); // Mobile menu
   const [isModalOpen, setIsModalOpen] = useState(false); // Login/Register modal
+
+  // Fetch user on mount
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
+
+  const scrollToSection = (id: string) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    setIsOpen(false); // close mobile menu
+  };
+
+  const handleLogout = async () => {
+    await axios.post(
+      "http://localhost:8000/api/auth/logout",
+      {},
+      { withCredentials: true }
+    );
+    dispatch(clearUser());
+  };
+
+  const handleGetStarted = () => {
+    if (!user) {
+      setIsModalOpen(true);
+    } else {
+      navigate("/resume");
+    }
+  };
 
   return (
     <>
@@ -24,81 +69,65 @@ const Header = () => {
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2 cursor-pointer"
+            onClick={() => scrollToSection("home")}
           >
-            <svg
-              width="180"
-              height="48"
-              viewBox="0 0 180 48"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <defs>
-                <linearGradient id="blueGradient" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#3B82F6" />
-                  <stop offset="100%" stop-color="#2563EB" />
-                </linearGradient>
-              </defs>
-              <rect x="2" y="4" width="40" height="40" rx="6" fill="url(#blueGradient)" />
-              <polygon points="34,4 34,14 42,14" fill="#1E40AF" />
-              <circle cx="22" cy="24" r="2" fill="white" />
-              <circle cx="14" cy="32" r="1.5" fill="white" />
-              <circle cx="30" cy="32" r="1.5" fill="white" />
-              <line x1="22" y1="24" x2="14" y2="32" stroke="white" stroke-width="1" />
-              <line x1="22" y1="24" x2="30" y2="32" stroke="white" stroke-width="1" />
-              <text x="50" y="28" font-family="Poppins, sans-serif" font-weight="700" font-size="18" fill="#111827">
-                ResuMate
-              </text>
-            </svg>
+            <Link to="/" className="font-bold text-xl text-blue-600">
+              ResuMate
+            </Link>
           </motion.div>
 
           {/* Desktop Menu */}
-          <motion.ul
-            className="hidden md:flex items-center space-x-8 text-gray-700 font-medium"
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: {},
-              visible: {
-                transition: { staggerChildren: 0.1 },
-              },
-            }}
-          >
+          <motion.ul className="hidden md:flex items-center space-x-8 text-gray-700 font-medium">
             {navItems.map((item, idx) => (
               <motion.li
                 key={idx}
                 className="hover:text-blue-600 transition cursor-pointer"
-                variants={{
-                  hidden: { y: -10, opacity: 0 },
-                  visible: { y: 0, opacity: 1 },
-                }}
-                whileHover={{ scale: 1.1 }}
+                whileHover={{ scale: 1.05 }}
+                onClick={() => scrollToSection(item.id)}
               >
-                {item}
+                {item.name}
               </motion.li>
             ))}
           </motion.ul>
 
           {/* Buttons */}
           <motion.div className="hidden md:flex items-center space-x-4">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              className="text-gray-700 hover:text-blue-600 transition"
-              onClick={() => setIsModalOpen(true)}
-            >
-              Login
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
-              onClick={() => setIsModalOpen(true)}
+            {user ? (
+              <>
+                <span className="text-gray-700 font-medium">
+                  Welcome, {user.fullName}!
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white px-4 cursor-pointer py-2 rounded-lg hover:bg-red-600 transition"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="text-gray-700 hover:text-blue-600 transition"
+                >
+                  Login
+                </button>
+              </>
+            )}
+            <button
+              onClick={handleGetStarted}
+              className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition cursor-pointer"
             >
               Get Started
-            </motion.button>
+            </button>
           </motion.div>
 
           {/* Mobile Menu Button */}
-          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-gray-700">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden text-gray-700 cursor-pointer"
+          >
             {isOpen ? <X size={26} /> : <Menu size={26} />}
           </button>
         </nav>
@@ -114,26 +143,45 @@ const Header = () => {
             >
               <ul className="flex flex-col space-y-4 text-gray-700 font-medium">
                 {navItems.map((item, idx) => (
-                  <motion.li key={idx} className="hover:text-blue-600 cursor-pointer" whileHover={{ scale: 1.05 }}>
-                    {item}
+                  <motion.li
+                    key={idx}
+                    className="hover:text-blue-600 cursor-pointer"
+                    whileHover={{ scale: 1.05 }}
+                    onClick={() => scrollToSection(item.id)}
+                  >
+                    {item.name}
                   </motion.li>
                 ))}
               </ul>
               <div className="flex flex-col space-y-3 pt-3 border-t border-gray-100">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  className="text-gray-700 hover:text-blue-600 transition"
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  Login
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
+                {user ? (
+                  <>
+                    <span className="text-gray-700 font-medium">
+                      Welcome, {user.fullName}!
+                    </span>
+                    <button
+                      onClick={handleLogout}
+                      className="bg-red-500 text-white px-4 py-2 cursor-pointer rounded-lg hover:bg-red-600 transition"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setIsModalOpen(true)}
+                      className="text-gray-700 hover:text-blue-600 transition cursor-pointer"
+                    >
+                      Login
+                    </button>
+                  </>
+                )}
+                <button
+                  onClick={handleGetStarted}
                   className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
-                  onClick={() => setIsModalOpen(true)}
                 >
                   Get Started
-                </motion.button>
+                </button>
               </div>
             </motion.div>
           )}
@@ -141,7 +189,10 @@ const Header = () => {
       </header>
 
       {/* Login/Register Modal */}
-      <LoginRegisterModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <LoginRegisterModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </>
   );
 };

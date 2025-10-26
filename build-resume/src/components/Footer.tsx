@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-900 text-gray-300 py-16 px-6 md:px-12">
+    <footer id="footer" className="bg-gray-900 text-gray-300 py-16 px-6 md:px-12">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Logo & tagline */}
         <div>
@@ -47,7 +47,7 @@ const Footer: React.FC = () => {
       </div>
 
       <div className="border-t border-gray-800 mt-12 pt-6 text-center text-gray-500 text-sm">
-        © 2025 Resume Builder. All rights reserved.
+        © 2025 Resumate. All rights reserved.
       </div>
     </footer>
   );

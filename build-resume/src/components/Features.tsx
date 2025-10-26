@@ -31,7 +31,7 @@ const features = [
 
 const Features: React.FC = () => {
   return (
-    <section className="bg-white py-20 px-6 md:px-12">
+    <section id="feature" className="bg-white py-20 px-6 md:px-12">
       <div className="max-w-6xl mx-auto text-center mb-12">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
           Why Choose ResuMate?

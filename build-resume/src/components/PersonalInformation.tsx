@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { User, X, Trash2 } from "lucide-react";
+import { X, Trash2 } from "lucide-react";
 import ResumeCard from "./Resumecard";
+import ResumeCard2 from "./ResumeCard2";
+import ResumeCard3 from "./Resumecard3";
 interface Experience {
   role: string;
   company: string;
@@ -13,7 +15,7 @@ interface Education {
   institute: string;
   branch: string;
   gpa: string;
-  start: string;
+  end: string;
 }
 
 const MultiStepResumeForm: React.FC = () => {
@@ -26,7 +28,6 @@ const MultiStepResumeForm: React.FC = () => {
   const [phone, setPhone] = useState("");
   const [location, setLocation] = useState("");
   const [profession, setProfession] = useState("");
-  const [userImage, setUserImage] = useState<File | null>(null);
   const [linkedin, setLinkedin] = useState("");
   const [website, setWebsite] = useState("");
   const [summary, setSummary] = useState("");
@@ -34,13 +35,11 @@ const MultiStepResumeForm: React.FC = () => {
   const [education, setEducation] = useState<Education[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
   const [skillInput, setSkillInput] = useState("");
+    const [selectedTemplate, setSelectedTemplate] = useState("1");
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, totalSteps));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) setUserImage(e.target.files[0]);
-  };
 
   const addSkill = () => {
     if (skillInput && !skills.includes(skillInput)) {
@@ -74,29 +73,27 @@ const MultiStepResumeForm: React.FC = () => {
             style={{ width: `${progress}%` }}
           ></div>
         </div>
+        <label
+          htmlFor="template"
+          className="block text-gray-700 font-semibold mb-2 text-center"
+        >
+          Select Resume Template
+        </label>
+        <select
+          id="template"
+          value={selectedTemplate}
+          onChange={(e) => setSelectedTemplate(e.target.value)}
+          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 shadow-sm focus:border-sky-500 focus:ring focus:ring-sky-200 transition"
+        >
+          <option value="1">Classic</option>
+          <option value="2">2 Column</option>
+          <option value="3">Extra</option>
+        </select>
 
         {/* Step Content */}
         {step === 1 && (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold">Personal Information</h2>
-            <div className="flex flex-col items-center gap-2">
-              {userImage ? (
-                <img
-                  src={URL.createObjectURL(userImage)}
-                  alt="User"
-                  className="w-24 h-24 rounded-full object-cover mb-2"
-                />
-              ) : (
-                <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-2">
-                  <User size={36} />
-                </div>
-              )}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-              />
-            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <input
                 type="text"
@@ -174,7 +171,7 @@ const MultiStepResumeForm: React.FC = () => {
                 >
                   <button
                     onClick={() => deleteExperience(idx)}
-                    className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                    className="absolute top-2 right-2 cursor-pointer bg-gray-100 p-2 rounded-full  text-red-500 hover:text-red-700"
                     title="Delete Experience"
                   >
                     <Trash2 size={20} />
@@ -236,7 +233,7 @@ const MultiStepResumeForm: React.FC = () => {
                 </div>
               ))}
             <button
-              className="text-blue-600 mt-2"
+              className="text-blue-600 mt-2 cursor-pointer"
               onClick={() =>
                 setExperience([
                   ...experience,
@@ -265,7 +262,7 @@ const MultiStepResumeForm: React.FC = () => {
               >
                 <button
                   onClick={() => deleteEducation(idx)}
-                  className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                  className="absolute top-2 cursor-pointer right-2 text-red-500 hover:text-red-700"
                   title="Delete Education"
                 >
                   <Trash2 size={20} />
@@ -304,12 +301,12 @@ const MultiStepResumeForm: React.FC = () => {
                   className="border p-2 rounded-lg w-full"
                 />
                 <input
-                  type="text"
-                  placeholder="Start Date"
-                  value={edu.start}
+                  type="date"
+                  placeholder="End Date"
+                  value={edu.end}
                   onChange={(e) => {
                     const newEdu = [...education];
-                    newEdu[idx].start = e.target.value;
+                    newEdu[idx].end = e.target.value;
                     setEducation(newEdu);
                   }}
                   className="border p-2 rounded-lg w-full"
@@ -328,11 +325,11 @@ const MultiStepResumeForm: React.FC = () => {
               </div>
             ))}
             <button
-              className="text-blue-600 mt-2"
+              className="text-blue-600 mt-2 cursor-pointer"
               onClick={() =>
                 setEducation([
                   ...education,
-                  { institute: "", degree: "", branch: "", start: "", gpa: "" },
+                  { institute: "", degree: "", branch: "", end: "", gpa: "" },
                 ])
               }
             >
@@ -370,7 +367,7 @@ const MultiStepResumeForm: React.FC = () => {
               />
               <button
                 onClick={addSkill}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                className="bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
               >
                 Add
               </button>
@@ -383,7 +380,7 @@ const MultiStepResumeForm: React.FC = () => {
           {step > 1 && (
             <button
               onClick={prevStep}
-              className="bg-gray-300 px-6 py-2 rounded-lg hover:bg-gray-400 transition"
+              className="bg-gray-300 px-6 py-2 cursor-pointer rounded-lg hover:bg-gray-400 transition"
             >
               Previous
             </button>
@@ -391,14 +388,14 @@ const MultiStepResumeForm: React.FC = () => {
           {step < totalSteps ? (
             <button
               onClick={nextStep}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition ml-auto"
+              className="bg-blue-600 text-white cursor-pointer  px-6 py-2 rounded-lg hover:bg-blue-700 transition ml-auto"
             >
               Next
             </button>
           ) : (
             <button
               onClick={() => alert("Resume Saved!")}
-              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition ml-auto"
+              className="bg-green-600 text-white cursor-pointer px-6 py-2 rounded-lg hover:bg-green-700 transition ml-auto"
             >
               Save
             </button>
@@ -408,7 +405,7 @@ const MultiStepResumeForm: React.FC = () => {
 
       {/* Resume Preview Side Panel */}
 
-      <ResumeCard
+      { selectedTemplate=="1" &&<ResumeCard 
         fullName={fullName}
         profession={profession}
         email={email}
@@ -421,7 +418,35 @@ const MultiStepResumeForm: React.FC = () => {
         city={location}
         linkedin={linkedin}
         website={website}
-      />
+      />}
+      {selectedTemplate=="2" && <ResumeCard2
+        fullName={fullName}
+        profession={profession}
+        email={email}
+        summary={summary}
+        experience={experience}
+        education={education}
+        skills={skills}
+        secondaryColor="purple-500"
+        phone={phone}
+        city={location}
+        linkedin={linkedin}
+        website={website}
+      />}
+      {selectedTemplate=="3" && <ResumeCard3
+        fullName={fullName}
+        profession={profession}
+        email={email}
+        summary={summary}
+        experience={experience}
+        education={education}
+        skills={skills}
+        secondaryColor="purple-500"
+        phone={phone}
+        city={location}
+        linkedin={linkedin}
+        website={website}
+      />}
     </section>
   );
 };

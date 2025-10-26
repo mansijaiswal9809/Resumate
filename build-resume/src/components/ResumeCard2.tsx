@@ -1,0 +1,205 @@
+import React from "react";
+import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
+
+interface Experience {
+  role: string;
+  company: string;
+  start: string;
+  end: string;
+  description: string;
+}
+
+interface Education {
+  degree: string;
+  institute: string;
+  branch?: string;
+  gpa?: string;
+  start?: string;
+}
+
+interface ResumeCardProps {
+  fullName: string;
+  profession: string;
+  email: string;
+  summary?: string;
+  experience?: Experience[];
+  education?: Education[];
+  skills?: string[];
+  secondaryColor?: string;
+  className?: string;
+  phone?: string;
+  city?: string;
+  linkedin?: string;
+  website?: string;
+}
+
+const ResumeCard2: React.FC<ResumeCardProps> = ({
+  fullName,
+  profession,
+  email,
+  summary,
+  experience = [],
+  education = [],
+  skills = [],
+  secondaryColor = "blue-500",
+  phone,
+  city,
+  linkedin,
+  website,
+//   className = "",
+}) => {
+  const bgAccent = `bg-${secondaryColor}`;
+  const textAccent = `text-${secondaryColor}`;
+
+  return (
+    <div
+      className={`hidden flex-1 lg:flex bg-white rounded-2xl shadow-2xl overflow-hidden max-w-6xl mx-auto transition-all hover:shadow-[0_10px_25px_rgba(0,0,0,0.1)]`}
+    >
+      {/* Sidebar */}
+      <aside
+        className={`w-1/3 ${bgAccent.replace("bg-", "bg-linear-to-b from-")}`}
+      >
+        <div className="flex flex-col items-center text-center p-8 h-full">
+          <h2 className="text-3xl font-bold">{fullName}</h2>
+          <p className="text-lg mt-1">{profession}</p>
+
+          {/* Contact Info */}
+          <div className="mt-6 text-sm space-y-3">
+            {email && (
+              <div className="flex items-center justify-center gap-2">
+                <Mail size={16} /> <span>{email}</span>
+              </div>
+            )}
+            {phone && (
+              <div className="flex items-center justify-center gap-2">
+                <Phone size={16} /> <span>{phone}</span>
+              </div>
+            )}
+            {city && (
+              <div className="flex items-center justify-center gap-2">
+                <MapPin size={16} /> <span>{city}</span>
+              </div>
+            )}
+            {linkedin && (
+              <div className="flex items-center justify-center gap-2">
+                <Linkedin size={16} />
+                <a
+                  href={linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline"
+                >
+                  LinkedIn
+                </a>
+              </div>
+            )}
+            {website && (
+              <div className="flex items-center justify-center gap-2">
+                <Globe size={16} />
+                <a
+                  href={website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline"
+                >
+                  Portfolio
+                </a>
+              </div>
+            )}
+          </div>
+
+          {/* Skills */}
+          {skills.length > 0 && (
+            <div className="mt-8 w-full">
+              <h3 className="text-lg font-semibold mb-3 border-b border-white/30 pb-1">
+                Skills
+              </h3>
+              <div className="flex flex-wrap justify-center gap-2 text-md font-semibold">
+                {skills.map((skill) => (
+                  <span
+                    key={skill}
+                    className="px-3 py-1 bg-white/10 rounded-full border border-white/30"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 p-10 space-y-8">
+        {/* Summary */}
+        {summary && (
+          <section>
+            <h3 className={`text-2xl font-semibold mb-3 ${textAccent}`}>
+              Profile Summary
+            </h3>
+            <p className="text-gray-700 leading-relaxed">{summary}</p>
+          </section>
+        )}
+
+        {/* Experience */}
+        {experience.length > 0 && (
+          <section>
+            <h3 className={`text-2xl font-semibold mb-3 ${textAccent}`}>
+              Experience
+            </h3>
+            <div className="relative border-l border-gray-200 pl-6 space-y-6">
+              {experience.map((exp, i) => (
+                <div key={i} className="relative">
+                  <h4 className="font-semibold">
+                    {exp.role}{" "}
+                    <span className="text-gray-500 font-normal">
+                      @ {exp.company}
+                    </span>
+                  </h4>
+                  <p className="text-gray-500 text-sm">
+                    {exp.start} – {exp.end}
+                  </p>
+                  <p className="text-gray-700 mt-1">{exp.description}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Education */}
+        {education.length > 0 && (
+          <section>
+            <h3 className={`text-2xl font-semibold mb-3 ${textAccent}`}>
+              Education
+            </h3>
+            <div className="relative border-l border-gray-200 pl-6 space-y-6">
+              {education.map((edu, i) => (
+                <div key={i} className="relative">
+                  <span
+                    className={`absolute -left-[9px] w-4 h-4 rounded-full ${bgAccent}`}
+                  ></span>
+                  <h4 className="font-semibold">
+                    {edu.degree}{" "}
+                    <span className="text-gray-500 font-normal">
+                      – {edu.institute}
+                    </span>
+                  </h4>
+                  {(edu.branch || edu.gpa) && (
+                    <p className="text-gray-600 text-sm">
+                      {edu.branch} {edu.gpa && `| GPA: ${edu.gpa}`}
+                    </p>
+                  )}
+                  {edu.start && (
+                    <p className="text-gray-500 text-sm">{edu.start}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </main>
+    </div>
+  );
+};
+
+export default ResumeCard2;
