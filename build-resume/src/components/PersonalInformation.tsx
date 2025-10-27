@@ -221,25 +221,37 @@ const MultiStepResumeForm: React.FC = () => {
                   >
                     <Trash2 size={18} />
                   </button>
-                  {["company", "role", "start", "end", "description"].map(
-                    (key) => (
-                      <input
-                        key={key}
-                        type="text"
-                        placeholder={key}
-                        value={(exp as any)[key]}
-                        onChange={(e) => {
-                          const updated = [...formData.experience];
-                          updated[idx] = {
-                            ...updated[idx],
-                            [key]: e.target.value,
-                          };
-                          setFormData({ ...formData, experience: updated });
-                        }}
-                        className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition"
-                      />
-                    )
-                  )}
+                  {["company", "role", "start", "end"].map((key) => (
+                    <input
+                      key={key}
+                      type="text"
+                      placeholder={key}
+                      value={(exp as any)[key]}
+                      onChange={(e) => {
+                        const updated = [...formData.experience];
+                        updated[idx] = {
+                          ...updated[idx],
+                          [key]: e.target.value,
+                        };
+                        setFormData({ ...formData, experience: updated });
+                      }}
+                      className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition"
+                    />
+                  ))}
+                  <textarea
+                    onChange={(e) => {
+                      const updated = [...formData.experience];
+                      updated[idx] = {
+                        ...updated[idx],
+                        description: e.target.value,
+                      };
+                      
+                      setFormData({ ...formData, experience: updated });
+                    }}
+                    value={(exp as any)["description"]}
+                    placeholder="Description"
+                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition"
+                  ></textarea>
                 </div>
               ))}
               <button

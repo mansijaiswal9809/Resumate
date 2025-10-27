@@ -4,18 +4,22 @@ import { useNavigate } from "react-router-dom";
 import type { RootState } from "../store/store";
 import LoginRegisterModal from "./Login";
 const users = [
-  "/users/user1.jpg",
-  "/users/user2.jpg",
-  "/users/user3.jpg",
-  "/users/user4.jpg",
-  "/users/user5.jpg",
-];
+  "https://randomuser.me/api/portraits/women/44.jpg",
 
-const brands = [
-  "/brands/logo1.png",
-  "/brands/logo2.png",
-  "/brands/logo3.png",
-  "/brands/logo4.png",
+  "https://randomuser.me/api/portraits/men/32.jpg",
+
+  "https://randomuser.me/api/portraits/women/65.jpg",
+
+  "https://randomuser.me/api/portraits/men/76.jpg",
+
+  "https://randomuser.me/api/portraits/women/12.jpg",
+];
+ const brands=[
+  { src: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg', alt: 'Google' },
+  { src: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg', alt: 'Microsoft' },
+  { src: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg', alt: 'Apple' },
+  { src: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg', alt: 'Amazon' },
+  { src: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg', alt: 'Facebook' }
 ];
 
 const Hero: React.FC = () => {
@@ -39,7 +43,9 @@ const Hero: React.FC = () => {
               key={idx}
               src={user}
               alt={`user${idx + 1}`}
-              className="w-10 h-10 rounded-full border-2 border-white shadow"
+              className={`w-10 h-10 rounded-full border-2 border-white shadow translate-x-[${
+                (4 - Number(idx)) * 20
+              }px]`}
             />
           ))}
         </div>
@@ -85,8 +91,8 @@ const Hero: React.FC = () => {
           {brands.map((brand, idx) => (
             <img
               key={idx}
-              src={brand}
-              alt={`brand${idx + 1}`}
+              src={brand.src}
+              alt={brand.alt}
               className="h-8"
             />
           ))}

@@ -48,7 +48,7 @@ const ResumeCard3: React.FC<ResumeCardProps> = ({
 
   return (
     <div
-      className={` text-white flex-1 lg:flex b rounded-3xl shadow-xl overflow-hidden min-h-[900px] max-w-6xl mx-auto transition-transform hover:-translate-y-1  `}
+      className={` text-white bg-purple-500 flex-1 lg:flex b rounded-3xl shadow-xl overflow-hidden min-h-[900px] max-w-6xl mx-auto transition-transform hover:-translate-y-1  `}
     >
       {/* Sidebar */}
       <aside
@@ -150,7 +150,7 @@ const ResumeCard3: React.FC<ResumeCardProps> = ({
               {experience.map((exp, i) => (
                 <div
                   key={i}
-                  className={`border-l-4 pl-4 bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition`}
+                  className={`border-l-4 border-purple-500 pl-4 bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition`}
                 >
                   <h4 className="font-semibold text-lg">
                     {exp.role}{" "}
@@ -178,7 +178,7 @@ const ResumeCard3: React.FC<ResumeCardProps> = ({
               {education.map((edu, i) => (
                 <div
                   key={i}
-                  className={`border-l-4 pl-4 bg-white rounded-lg shadow-sm p-4`}
+                  className={`border-l-4 border-purple-500 pl-4 bg-white rounded-lg shadow-sm p-4`}
                 >
                   <h4 className="font-semibold text-lg">
                     {edu.degree}{" "}

@@ -3,12 +3,13 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Trash2, Edit2, X } from "lucide-react";
 import type { ResumeCardProps } from "../type";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ResumeLandingPage: React.FC<{ userName?: string }> = ({ userName }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [resumeTitle, setResumeTitle] = useState("");
   const [resumes, setResumes] = useState<ResumeCardProps[]>([]);
+  const navigate = useNavigate();
 
   const fetchResume = async () => {
     try {
@@ -31,7 +32,8 @@ const ResumeLandingPage: React.FC<{ userName?: string }> = ({ userName }) => {
       toast.success("Resume created!");
       setIsModalOpen(false);
       setResumeTitle("");
-      setResumes((prev) => [...prev, res.data]); // update list instantly
+      setResumes((prev) => [...prev, res.data]);
+      navigate(`/personal-info/${res.data._id}`);
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Something went wrong");
     }

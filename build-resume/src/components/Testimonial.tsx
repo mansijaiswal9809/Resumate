@@ -8,18 +8,17 @@ type Testimonial = {
   quote: string;
 };
 
-// 10 sample testimonials
 const testimonials: Testimonial[] = [
-  { name: "Briar Martin", handle: "@neilstellar", image: "/users/user1.jpg", quote: "ResuMate made building my resume an absolute breeze." },
-  { name: "Avery Johnson", handle: "@averywrites", image: "/users/user2.jpg", quote: "ResuMate helped me craft a professional resume in minutes!" },
-  { name: "Jordan Lee", handle: "@jordantalks", image: "/users/user3.jpg", quote: "Creating my resume with ResuMate was seamless and easy." },
-  { name: "Sophia Green", handle: "@sophiag", image: "/users/user4.jpg", quote: "AI suggestions helped me highlight my strengths perfectly." },
-  { name: "Liam Smith", handle: "@liamsmith", image: "/users/user5.jpg", quote: "I landed interviews faster thanks to ResuMate." },
-  { name: "Olivia Brown", handle: "@oliviab", image: "/users/user6.jpg", quote: "Professional templates made my resume shine." },
-  { name: "Ethan White", handle: "@ethanw", image: "/users/user7.jpg", quote: "Easy to use and very intuitive AI tool." },
-  { name: "Ava Davis", handle: "@avadavis", image: "/users/user8.jpg", quote: "Loved how quick and smooth the process was." },
-  { name: "Noah Wilson", handle: "@noahw", image: "/users/user9.jpg", quote: "ResuMate optimized my resume for ATS perfectly." },
-  { name: "Mia Taylor", handle: "@miat", image: "/users/user10.jpg", quote: "Highly recommend it for anyone job hunting!" },
+  { name: "Briar Martin", handle: "@neilstellar", image: "https://randomuser.me/api/portraits/men/32.jpg", quote: "ResuMate made building my resume an absolute breeze." },
+  { name: "Avery Johnson", handle: "@averywrites", image: "https://randomuser.me/api/portraits/women/44.jpg", quote: "ResuMate helped me craft a professional resume in minutes!" },
+  { name: "Jordan Lee", handle: "@jordantalks", image: "https://randomuser.me/api/portraits/men/65.jpg", quote: "Creating my resume with ResuMate was seamless and easy." },
+  { name: "Sophia Green", handle: "@sophiag", image: "https://randomuser.me/api/portraits/women/22.jpg", quote: "AI suggestions helped me highlight my strengths perfectly." },
+  { name: "Liam Smith", handle: "@liamsmith", image: "https://randomuser.me/api/portraits/men/76.jpg", quote: "I landed interviews faster thanks to ResuMate." },
+  { name: "Olivia Brown", handle: "@oliviab", image: "https://randomuser.me/api/portraits/women/55.jpg", quote: "Professional templates made my resume shine." },
+  { name: "Ethan White", handle: "@ethanw", image: "https://randomuser.me/api/portraits/men/12.jpg", quote: "Easy to use and very intuitive AI tool." },
+  { name: "Ava Davis", handle: "@avadavis", image: "https://randomuser.me/api/portraits/women/33.jpg", quote: "Loved how quick and smooth the process was." },
+  { name: "Noah Wilson", handle: "@noahw", image: "https://randomuser.me/api/portraits/men/50.jpg", quote: "ResuMate optimized my resume for ATS perfectly." },
+  { name: "Mia Taylor", handle: "@miat", image: "https://randomuser.me/api/portraits/women/11.jpg", quote: "Highly recommend it for anyone job hunting!" },
 ];
 
 const TestimonialsCarousel: React.FC = () => {
