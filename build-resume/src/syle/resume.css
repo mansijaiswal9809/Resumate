@@ -1,0 +1,23 @@
+/* resume.css */
+@media screen {
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: white;
+    margin: 10px auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 20mm;
+    box-sizing: border-box;
+  }
+}
+
+@media print {
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    page-break-after: always;
+    box-shadow: none;
+    margin: 0;
+    padding: 20mm;
+  }
+}

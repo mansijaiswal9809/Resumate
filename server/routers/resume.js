@@ -22,13 +22,15 @@ router.post("/", protect, async (req, res) => {
 router.patch("/:id", protect, async (req, res) => {
   try {
     const id = req.params.id;
-    const resume = await Resume.findbyId({ id });
-    const updatedresume = await Resume.updateOne({ id }, { ...req.body });
+    // console.log(req.body,id)
+    const resume = await Resume.findById({ _id: id });
+    const updatedresume = await Resume.updateOne({ _id: id }, { ...req.body });
+    console.log(updatedresume);
     res.status(200).json(updatedresume);
   } catch (error) {
     res
       .status(500)
-      .json({ message: "error updating resume", error: err.message });
+      .json({ message: "error updating resume", error: error.message });
   }
 });
 
@@ -56,10 +58,20 @@ router.get("/:id", protect, async (req, res) => {
     }
     res.status(200).json(resume);
   } catch (err) {
-    console.error(err);
+    // console.error(err);
     res
       .status(500)
       .json({ message: "Error fetching resume", error: err.message });
+  }
+});
+router.delete("/:id", protect, async (req,res) => {
+  try {
+    await Resume.deleteOne({ _id: req.params.id });
+    res.status(200).json({ message: "Your Resume deleted Successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error Deleting resume", error: error.message });
   }
 });
 

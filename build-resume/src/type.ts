@@ -25,7 +25,6 @@ export interface ResumeCardProps {
   experience?: Experience[];
   education?: Education[];
   skills?: string[];
-  secondaryColor?: string; // tailwind color suffix e.g. "purple-500"
   className?: string;
   phone?: string;
   city?: string;

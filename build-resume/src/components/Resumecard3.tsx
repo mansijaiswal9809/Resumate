@@ -25,7 +25,6 @@ interface ResumeCardProps {
   experience?: Experience[];
   education?: Education[];
   skills?: string[];
-  secondaryColor?: string;
   className?: string;
   phone?: string;
   city?: string;
@@ -41,26 +40,19 @@ const ResumeCard3: React.FC<ResumeCardProps> = ({
   experience = [],
   education = [],
   skills = [],
-  secondaryColor = "emerald-500",
   phone,
   city,
   linkedin,
   website,
 }) => {
-  const textAccent = `text-${secondaryColor}`;
-  const bgAccent = `bg-${secondaryColor}`;
-  const borderAccent = `border-${secondaryColor}`;
 
   return (
     <div
-      className={`hidden text-white flex-1 lg:flex b rounded-3xl shadow-xl overflow-hidden min-h-[900px] max-w-6xl mx-auto transition-transform hover:-translate-y-1  ${bgAccent}`}
+      className={` text-white flex-1 lg:flex b rounded-3xl shadow-xl overflow-hidden min-h-[900px] max-w-6xl mx-auto transition-transform hover:-translate-y-1  `}
     >
       {/* Sidebar */}
       <aside
-        className={`w-1/3 flex flex-col justify-between bg-linear-to-b from-${secondaryColor} to-${secondaryColor.replace(
-          "500",
-          "700"
-        )}  p-8`}
+        className={`w-1/3 flex flex-col justify-between bg-linear-to-b   p-8`}
       >
         <div>
           <h2 className="text-3xl font-bold mb-1">{fullName}</h2>
@@ -158,7 +150,7 @@ const ResumeCard3: React.FC<ResumeCardProps> = ({
               {experience.map((exp, i) => (
                 <div
                   key={i}
-                  className={`border-l-4 ${borderAccent} pl-4 bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition`}
+                  className={`border-l-4 pl-4 bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition`}
                 >
                   <h4 className="font-semibold text-lg">
                     {exp.role}{" "}
@@ -179,14 +171,14 @@ const ResumeCard3: React.FC<ResumeCardProps> = ({
         {/* Education */}
         {education.length > 0 && (
           <section>
-            <h3 className={`text-2xl font-semibold mb-3 ${textAccent}`}>
+            <h3 className={`text-2xl font-semibold mb-3`}>
               Education
             </h3>
             <div className="space-y-6">
               {education.map((edu, i) => (
                 <div
                   key={i}
-                  className={`border-l-4 ${borderAccent} pl-4 bg-white rounded-lg shadow-sm p-4`}
+                  className={`border-l-4 pl-4 bg-white rounded-lg shadow-sm p-4`}
                 >
                   <h4 className="font-semibold text-lg">
                     {edu.degree}{" "}

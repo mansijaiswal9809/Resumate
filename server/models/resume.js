@@ -34,7 +34,6 @@ const ResumeSchema = new mongoose.Schema(
     experience: { type: [ExperienceSchema], default: [] },
     education: { type: [EducationSchema], default: [] },
     skills: { type: [String], default: [] },
-    secondaryColor: { type: String, default: "purple-500" },
     phone: { type: String },
     city: { type: String },
     linkedin: { type: String },

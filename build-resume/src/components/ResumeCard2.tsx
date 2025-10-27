@@ -25,7 +25,6 @@ interface ResumeCardProps {
   experience?: Experience[];
   education?: Education[];
   skills?: string[];
-  secondaryColor?: string;
   className?: string;
   phone?: string;
   city?: string;
@@ -41,23 +40,19 @@ const ResumeCard2: React.FC<ResumeCardProps> = ({
   experience = [],
   education = [],
   skills = [],
-  secondaryColor = "blue-500",
   phone,
   city,
   linkedin,
   website,
 //   className = "",
 }) => {
-  const bgAccent = `bg-${secondaryColor}`;
-  const textAccent = `text-${secondaryColor}`;
-
   return (
     <div
-      className={`hidden flex-1 lg:flex bg-white rounded-2xl shadow-2xl overflow-hidden max-w-6xl mx-auto transition-all hover:shadow-[0_10px_25px_rgba(0,0,0,0.1)]`}
+      className={` flex-1 lg:flex bg-white rounded-2xl shadow-2xl overflow-hidden max-w-6xl mx-auto transition-all hover:shadow-[0_10px_25px_rgba(0,0,0,0.1)]`}
     >
       {/* Sidebar */}
       <aside
-        className={`w-1/3 ${bgAccent.replace("bg-", "bg-linear-to-b from-")}`}
+        className={`w-1/3`}
       >
         <div className="flex flex-col items-center text-center p-8 h-full">
           <h2 className="text-3xl font-bold">{fullName}</h2>
@@ -134,7 +129,7 @@ const ResumeCard2: React.FC<ResumeCardProps> = ({
         {/* Summary */}
         {summary && (
           <section>
-            <h3 className={`text-2xl font-semibold mb-3 ${textAccent}`}>
+            <h3 className={`text-2xl font-semibold mb-3 `}>
               Profile Summary
             </h3>
             <p className="text-gray-700 leading-relaxed">{summary}</p>
@@ -144,7 +139,7 @@ const ResumeCard2: React.FC<ResumeCardProps> = ({
         {/* Experience */}
         {experience.length > 0 && (
           <section>
-            <h3 className={`text-2xl font-semibold mb-3 ${textAccent}`}>
+            <h3 className={`text-2xl font-semibold mb-3 `}>
               Experience
             </h3>
             <div className="relative border-l border-gray-200 pl-6 space-y-6">
@@ -169,14 +164,14 @@ const ResumeCard2: React.FC<ResumeCardProps> = ({
         {/* Education */}
         {education.length > 0 && (
           <section>
-            <h3 className={`text-2xl font-semibold mb-3 ${textAccent}`}>
+            <h3 className={`text-2xl font-semibold mb-3 `}>
               Education
             </h3>
             <div className="relative border-l border-gray-200 pl-6 space-y-6">
               {education.map((edu, i) => (
                 <div key={i} className="relative">
                   <span
-                    className={`absolute -left-[9px] w-4 h-4 rounded-full ${bgAccent}`}
+                    className={`absolute -left-[9px] w-4 h-4 rounded-full `}
                   ></span>
                   <h4 className="font-semibold">
                     {edu.degree}{" "}
