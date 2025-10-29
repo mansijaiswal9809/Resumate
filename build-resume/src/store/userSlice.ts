@@ -15,7 +15,7 @@ const initialState: UserState = {
 
 // Async thunk to fetch current user
 export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
-  const res = await axios.get("http://localhost:8000/api/auth/me", {
+  const res = await axios.get(`${import.meta.env.BACKEND_BASEURL}/api/auth/me`, {
     withCredentials: true,
   });
   return res.data.user;

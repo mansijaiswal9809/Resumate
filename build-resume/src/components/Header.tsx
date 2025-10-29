@@ -4,7 +4,7 @@ import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import { clearUser, fetchUser } from "../store/userSlice";
-import LoginRegisterModal from "./Login"; // make sure path is correct
+import LoginRegisterModal from "./Login"; 
 import type { AppDispatch, RootState } from "../store/store";
 import axios from "axios";
 
@@ -17,12 +17,12 @@ const navItems = [
 
 const Header = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigate= useNavigate()
-  const user = useSelector((state: RootState) => state.user.user); // Redux user
-  const [isOpen, setIsOpen] = useState(false); // Mobile menu
-  const [isModalOpen, setIsModalOpen] = useState(false); // Login/Register modal
+  const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.user.user);
+  const [isOpen, setIsOpen] = useState(false); 
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Fetch user on mount
+
   useEffect(() => {
     dispatch(fetchUser());
   }, [dispatch]);
@@ -34,16 +34,17 @@ const Header = () => {
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-    setIsOpen(false); // close mobile menu
+    setIsOpen(false); 
   };
 
   const handleLogout = async () => {
     await axios.post(
-      "http://localhost:8000/api/auth/logout",
+      `${import.meta.env.BACKEND_BASEURL}/api/auth/logout`,
       {},
       { withCredentials: true }
     );
     dispatch(clearUser());
+   window.location.href = '/';
   };
 
   const handleGetStarted = () => {
@@ -69,12 +70,63 @@ const Header = () => {
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="flex items-center space-x-2 cursor-pointer"
-            onClick={() => scrollToSection("home")}
+            className="flex items-center space-x-2"
           >
-            <Link to="/" className="font-bold text-xl text-blue-600">
-              ResuMate
-            </Link>
+            <Link to="/">
+            <svg
+              width="180"
+              height="48"
+              viewBox="0 0 180 48"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <linearGradient id="blueGradient" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#3B82F6" />
+                  <stop offset="100%" stopColor="#2563EB" />
+                </linearGradient>
+              </defs>
+
+              <rect
+                x="2"
+                y="4"
+                width="40"
+                height="40"
+                rx="6"
+                fill="url(#blueGradient)"
+              />
+              <polygon points="34,4 34,14 42,14" fill="#1E40AF" />
+              <circle cx="22" cy="24" r="2" fill="white" />
+              <circle cx="14" cy="32" r="1.5" fill="white" />
+              <circle cx="30" cy="32" r="1.5" fill="white" />
+              <line
+                x1="22"
+                y1="24"
+                x2="14"
+                y2="32"
+                stroke="white"
+                strokeWidth="1"
+              />
+              <line
+                x1="22"
+                y1="24"
+                x2="30"
+                y2="32"
+                stroke="white"
+                strokeWidth="1"
+              />
+              <text
+                x="50"
+                y="28"
+                fontFamily="Poppins, sans-serif"
+                fontWeight="700"
+                fontSize="18"
+                fill="#111827"
+              >
+                ResuMate
+              </text>
+            </svg>
+                </Link>
           </motion.div>
 
           {/* Desktop Menu */}

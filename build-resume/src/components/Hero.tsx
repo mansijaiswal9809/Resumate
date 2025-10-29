@@ -36,6 +36,7 @@ const Hero: React.FC = () => {
   return (
     <section id="hero" className="bg-gray-50 px-6 md:px-12 py-20 text-center">
       {/* Top User Highlight */}
+      
       <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
         <div className="flex items-center justify-center space-x-3">
           {users.map((user, idx) => (

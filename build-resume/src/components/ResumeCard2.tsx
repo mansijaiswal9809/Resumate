@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Download } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { motion } from "framer-motion";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 interface Experience {
   role: string;
@@ -46,7 +48,6 @@ const ResumeCard2: React.FC<ResumeCardProps> = ({
   linkedin,
   website,
 }) => {
-  // 🧩 Initial layout — summary, experience, education on LEFT; skills on RIGHT
   const [leftSections, setLeftSections] = useState([
     "summary",
     "experience",
@@ -54,7 +55,29 @@ const ResumeCard2: React.FC<ResumeCardProps> = ({
   ]);
   const [rightSections, setRightSections] = useState(["skills"]);
 
-  // 🔄 Handle drag between columns
+  const resumeRef = useRef<HTMLDivElement>(null);
+
+  // 🧾 PDF Download
+  const handleDownloadPDF = async () => {
+    const input = resumeRef.current;
+    if (!input) return;
+
+    const canvas = await html2canvas(input, {
+      scale: 2, // Higher scale = better quality
+      useCORS: true,
+      logging: false,
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    const pdfWidth = 210; // A4 width in mm
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`${fullName.replace(/\s+/g, "_")}_Resume.pdf`);
+  };
+
   const onDragEnd = (result: any) => {
     const { source, destination } = result;
     if (!destination) return;
@@ -82,29 +105,21 @@ const ResumeCard2: React.FC<ResumeCardProps> = ({
     }
   };
 
-  // 🎨 Render each section
   const renderSection = (section: string) => {
     switch (section) {
       case "summary":
         return (
           summary && (
-            <motion.section
-              layout
-              className="bg-white  p-4 mb-4 shadow-sm"
-            >
+            <motion.section layout className="bg-white p-4 mb-4 shadow-sm">
               <h3 className="text-xl font-semibold mb-2">Profile Summary</h3>
               <p className="text-gray-700 leading-relaxed">{summary}</p>
             </motion.section>
           )
         );
-
       case "experience":
         return (
           experience.length > 0 && (
-            <motion.section
-              layout
-              className="bg-white  p-4 mb-4 shadow-sm"
-            >
+            <motion.section layout className="bg-white p-4 mb-4 shadow-sm">
               <h3 className="text-xl font-semibold mb-2">Experience</h3>
               {experience.map((exp, i) => (
                 <div key={i} className="mb-3">
@@ -121,14 +136,10 @@ const ResumeCard2: React.FC<ResumeCardProps> = ({
             </motion.section>
           )
         );
-
       case "education":
         return (
           education.length > 0 && (
-            <motion.section
-              layout
-              className="bg-white  p-4 mb-4 shadow-sm"
-            >
+            <motion.section layout className="bg-white p-4 mb-4 shadow-sm">
               <h3 className="text-xl font-semibold mb-2">Education</h3>
               {education.map((edu, i) => (
                 <div key={i} className="mb-3">
@@ -149,14 +160,10 @@ const ResumeCard2: React.FC<ResumeCardProps> = ({
             </motion.section>
           )
         );
-
       case "skills":
         return (
           skills.length > 0 && (
-            <motion.section
-              layout
-              className="bg-white  p-4 mb-4 shadow-sm"
-            >
+            <motion.section layout className="bg-white p-4 mb-4 shadow-sm">
               <h3 className="text-xl font-semibold mb-2">Skills</h3>
               <div className="flex flex-wrap gap-2">
                 {skills.map((s) => (
@@ -177,13 +184,22 @@ const ResumeCard2: React.FC<ResumeCardProps> = ({
   };
 
   return (
-    <div className="bg-gray-100 py-10 flex flex-col items-center">
-      {/* 🧾 A4 Page */}
+    <div className="bg-gray-100 py-2 flex flex-col items-end">
+
+      <button
+        onClick={handleDownloadPDF}
+        className="mb-2 flex items-center cursor-pointer gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition"
+      >
+        <Download size={18} /> Download PDF
+      </button>
+
+
       <div
+        ref={resumeRef}
         className="bg-white w-[210mm] min-h-[297mm] shadow-2xl rounded-xl p-10 flex flex-col"
         style={{ pageBreakAfter: "always" }}
       >
-        {/* Fixed Header */}
+        {/* Header */}
         <header className="text-center border-b pb-4 mb-6">
           <h2 className="text-3xl font-bold">{fullName}</h2>
           <p className="text-lg text-gray-600">{profession}</p>
@@ -210,7 +226,7 @@ const ResumeCard2: React.FC<ResumeCardProps> = ({
                   href={linkedin}
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:underline"
+                  className="hover:underline text-blue-600"
                 >
                   LinkedIn
                 </a>
@@ -223,7 +239,7 @@ const ResumeCard2: React.FC<ResumeCardProps> = ({
                   href={website}
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:underline"
+                  className="hover:underline text-blue-600"
                 >
                   Portfolio
                 </a>
@@ -232,10 +248,10 @@ const ResumeCard2: React.FC<ResumeCardProps> = ({
           </div>
         </header>
 
-        {/* Two-column draggable layout */}
+        {/* Columns */}
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="flex gap-6 flex-1">
-            {/* Left Column */}
+            {/* Left */}
             <Droppable droppableId="left">
               {(provided) => (
                 <div
@@ -265,7 +281,7 @@ const ResumeCard2: React.FC<ResumeCardProps> = ({
               )}
             </Droppable>
 
-            {/* Right Column */}
+            {/* Right */}
             <Droppable droppableId="right">
               {(provided) => (
                 <div

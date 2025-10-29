@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Download } from "lucide-react";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas-pro";
 import {
   DndContext,
   closestCenter,
@@ -32,9 +34,9 @@ interface Education {
 }
 
 interface ResumeCardProps {
-  title: string;
-  _id: string;
-  userId: string;
+  title?: string;
+  _id?: string;
+  userId?: string;
   fullName?: string;
   profession?: string;
   email?: string;
@@ -48,7 +50,7 @@ interface ResumeCardProps {
   website?: string;
 }
 
-// 🔹 Sortable item wrapper for each section
+// 🔹 Sortable wrapper (no PDF logic here)
 const SortableSection: React.FC<{ id: string; children: React.ReactNode }> = ({
   id,
   children,
@@ -74,6 +76,7 @@ const SortableSection: React.FC<{ id: string; children: React.ReactNode }> = ({
   );
 };
 
+// 🔹 Main Resume Component
 const ResumeCard: React.FC<ResumeCardProps> = ({
   city,
   fullName,
@@ -95,6 +98,7 @@ const ResumeCard: React.FC<ResumeCardProps> = ({
   ]);
 
   const sensors = useSensors(useSensor(PointerSensor));
+  const pdfRef = useRef<HTMLDivElement>(null);
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
@@ -107,165 +111,210 @@ const ResumeCard: React.FC<ResumeCardProps> = ({
     }
   };
 
-  return (
-    <div className="bg-white rounded-2xl shadow-2xl overflow-hidden p-8 flex-1">
-      {/* Header */}
-      <div className="text-center border-b pb-6 mb-6">
-        <h2 className="text-4xl font-bold">{fullName}</h2>
-        {profession && (
-          <p className="text-gray-700 text-xl mt-1 font-medium">
-            {profession}
-          </p>
-        )}
-        <div className="flex flex-wrap justify-center gap-4 mt-3 text-gray-500 text-sm">
-          {email && (
-            <div className="flex items-center gap-1">
-              <Mail size={16} /> {email}
-            </div>
-          )}
-          {phone && (
-            <div className="flex items-center gap-1">
-              <Phone size={16} /> {phone}
-            </div>
-          )}
-          {city && (
-            <div className="flex items-center gap-1">
-              <MapPin size={16} /> {city}
-            </div>
-          )}
-          {linkedin && (
-            <div className="flex items-center gap-1">
-              <Linkedin size={16} />{" "}
-              <a href={linkedin} className="hover:underline">
-                LinkedIn
-              </a>
-            </div>
-          )}
-          {website && (
-            <div className="flex items-center gap-1">
-              <Globe size={16} />{" "}
-              <a href={website} className="hover:underline">
-                Portfolio
-              </a>
-            </div>
-          )}
-        </div>
-      </div>
+  const downloadPDF = async () => {
+    if (!pdfRef.current) return;
 
-      {/* Draggable Sections */}
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
+    const element = pdfRef.current;
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const imgWidth = 210;
+    const pageHeight = 297;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+
+    pdf.save("my-resume.pdf");
+  };
+
+  return (
+   <div className="bg-gray-100 py-2 flex-1 flex flex-col items-end">
+
+      <button
+        onClick={downloadPDF}
+        className="mb-2 flex items-center cursor-pointer gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition"
       >
-        <SortableContext
-          items={sections}
-          strategy={verticalListSortingStrategy}
-        >
-          <div className="space-y-6">
-            {sections.map((section) => {
-              switch (section) {
-                case "summary":
-                  return (
-                    summary && (
-                      <SortableSection key="summary" id="summary">
-                        <h3 className="text-xl font-semibold mb-2">Summary</h3>
-                        <p className="text-gray-700">{summary}</p>
-                      </SortableSection>
-                    )
-                  );
-                case "experience":
-                  return (
-                    experience.length > 0 && (
-                      <SortableSection key="experience" id="experience">
-                        <h3 className="text-xl font-semibold mb-2">
-                          Experience
-                        </h3>
-                        <div className="space-y-3">
-                          {experience.map((exp, idx) => (
-                            <div
-                              key={idx}
-                              className="border-l-4 border-gray-200 pl-4 hover:border-gray-400 transition"
-                            >
-                              <p className="font-medium">
-                                {exp.role}{" "}
-                                <span className="text-gray-500">
-                                  @ {exp.company}
-                                </span>
-                              </p>
-                              <p className="text-gray-500 text-sm">
-                                {exp.start} – {exp.end}
-                              </p>
-                              <p className="text-gray-700 mt-1">
-                                {exp.description}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      </SortableSection>
-                    )
-                  );
-                case "education":
-                  return (
-                    education.length > 0 && (
-                      <SortableSection key="education" id="education">
-                        <h3 className="text-xl font-semibold mb-2">
-                          Education
-                        </h3>
-                        <div className="space-y-3">
-                          {education.map((edu, idx) => (
-                            <div
-                              key={idx}
-                              className="border-l-4 border-gray-200 pl-4 hover:border-gray-400 transition"
-                            >
-                              <p className="font-medium">
-                                {edu.degree}{" "}
-                                <span className="text-gray-500">
-                                  – {edu.institute}
-                                </span>
-                              </p>
-                              {(edu.branch || edu.gpa) && (
-                                <p className="text-gray-600 text-sm">
-                                  {edu.branch}{" "}
-                                  {edu.gpa && `| GPA: ${edu.gpa}`}
-                                </p>
-                              )}
-                              {edu.start && (
-                                <p className="text-gray-500 text-sm">
-                                  {edu.start}
-                                </p>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </SortableSection>
-                    )
-                  );
-                case "skills":
-                  return (
-                    skills.length > 0 && (
-                      <SortableSection key="skills" id="skills">
-                        <h3 className="text-xl font-semibold mb-2">Skills</h3>
-                        <div className="flex flex-wrap gap-2">
-                          {skills.map((skill) => (
-                            <span
-                              key={skill}
-                              className="px-3 py-1 rounded-full border text-sm font-medium"
-                            >
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
-                      </SortableSection>
-                    )
-                  );
-                default:
-                  return null;
-              }
-            })}
+        <Download size={18} /> Download PDF
+      </button>
+
+      <div
+        ref={pdfRef}
+        className="bg-white rounded-2xl shadow-2xl overflow-hidden p-8 flex-1"
+      >
+        {/* Header */}
+        <div className="text-center border-b pb-6 mb-6">
+          <h2 className="text-4xl font-bold">{fullName}</h2>
+          {profession && (
+            <p className="text-gray-700 text-xl mt-1 font-medium">
+              {profession}
+            </p>
+          )}
+          <div className="flex flex-wrap justify-center gap-4 mt-3 text-gray-500 text-sm">
+            {email && (
+              <div className="flex items-center gap-1">
+                <Mail size={16} /> {email}
+              </div>
+            )}
+            {phone && (
+              <div className="flex items-center gap-1">
+                <Phone size={16} /> {phone}
+              </div>
+            )}
+            {city && (
+              <div className="flex items-center gap-1">
+                <MapPin size={16} /> {city}
+              </div>
+            )}
+            {linkedin && (
+              <div className="flex items-center gap-1">
+                <Linkedin size={16} />{" "}
+                <a href={linkedin} className="hover:underline">
+                  LinkedIn
+                </a>
+              </div>
+            )}
+            {website && (
+              <div className="flex items-center gap-1">
+                <Globe size={16} />{" "}
+                <a href={website} className="hover:underline">
+                  Portfolio
+                </a>
+              </div>
+            )}
           </div>
-        </SortableContext>
-      </DndContext>
+        </div>
+
+        {/* Draggable Sections */}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={sections}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="space-y-6">
+              {sections.map((section) => {
+                switch (section) {
+                  case "summary":
+                    return (
+                      summary && (
+                        <SortableSection key="summary" id="summary">
+                          <h3 className="text-xl font-semibold mb-2">Summary</h3>
+                          <p className="text-gray-700">{summary}</p>
+                        </SortableSection>
+                      )
+                    );
+                  case "experience":
+                    return (
+                      experience.length > 0 && (
+                        <SortableSection key="experience" id="experience">
+                          <h3 className="text-xl font-semibold mb-2">
+                            Experience
+                          </h3>
+                          <div className="space-y-3">
+                            {experience.map((exp, idx) => (
+                              <div
+                                key={idx}
+                                className="border-l-4 border-gray-200 pl-4 hover:border-gray-400 transition"
+                              >
+                                <p className="font-medium">
+                                  {exp.role}{" "}
+                                  <span className="text-gray-500">
+                                    @ {exp.company}
+                                  </span>
+                                </p>
+                                <p className="text-gray-500 text-sm">
+                                  {exp.start} – {exp.end}
+                                </p>
+                                <p className="text-gray-700 mt-1">
+                                  {exp.description}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        </SortableSection>
+                      )
+                    );
+                  case "education":
+                    return (
+                      education.length > 0 && (
+                        <SortableSection key="education" id="education">
+                          <h3 className="text-xl font-semibold mb-2">
+                            Education
+                          </h3>
+                          <div className="space-y-3">
+                            {education.map((edu, idx) => (
+                              <div
+                                key={idx}
+                                className="border-l-4 border-gray-200 pl-4 hover:border-gray-400 transition"
+                              >
+                                <p className="font-medium">
+                                  {edu.degree}{" "}
+                                  <span className="text-gray-500">
+                                    – {edu.institute}
+                                  </span>
+                                </p>
+                                {(edu.branch || edu.gpa) && (
+                                  <p className="text-gray-600 text-sm">
+                                    {edu.branch}{" "}
+                                    {edu.gpa && `| GPA: ${edu.gpa}`}
+                                  </p>
+                                )}
+                                {edu.start && (
+                                  <p className="text-gray-500 text-sm">
+                                    {edu.start}
+                                  </p>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </SortableSection>
+                      )
+                    );
+                  case "skills":
+                    return (
+                      skills.length > 0 && (
+                        <SortableSection key="skills" id="skills">
+                          <h3 className="text-xl font-semibold mb-2">Skills</h3>
+                          <div className="flex flex-wrap gap-2">
+                            {skills.map((skill) => (
+                              <span
+                                key={skill}
+                                className="px-3 py-1 rounded-full border text-sm font-medium"
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </SortableSection>
+                      )
+                    );
+                  default:
+                    return null;
+                }
+              })}
+            </div>
+          </SortableContext>
+        </DndContext>
+      </div>
     </div>
   );
 };

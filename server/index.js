@@ -13,11 +13,11 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cookieParser()); // ← Add this to parse cookies
+app.use(cookieParser()); 
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // React app URL
+    origin:  process.env.FRONTENT_URL,// React app URL
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true, // required for cookies
   })
@@ -34,7 +34,9 @@ app.use("/api/resume", resumeRouter);
 app.use("/api/auth", authRouter);
 
 // Start server
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+// const PORT = process.env.PORT || 8000;
+// app.listen(PORT, () => {
+//   console.log(`🚀 Server running on port ${PORT}`);
+// });
+
+export default app;

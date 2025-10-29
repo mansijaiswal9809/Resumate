@@ -6,10 +6,12 @@ import Testimonials from "./components/Testimonial";
 import Footer from "./components/Footer";
 import PersonalInformation from "./components/PersonalInformation";
 import ResumeActions from "./components/ResumeAction";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
     <>
+      <Toaster position="top-right" reverseOrder={false} />
       <Header />
 
       <main className="min-h-[80vh]">

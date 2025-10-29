@@ -35,13 +35,18 @@ const LoginRegisterModal = ({
 
       // Call backend
       await axios.post(
-        `http://localhost:8000/api/auth/${endpoint}`,
+        `${import.meta.env.BACKEND_BASEURL}/api/auth/${endpoint}`,
         formData,
         { withCredentials: true } //  important for cookies
       );
 
       // Update Redux state from backend (cookie-based auth)
       await dispatch(fetchUser());
+      setFormData({
+        fullName: "",
+        email: "",
+        password: "",
+      });
 
       // Toast messages
       toast.success(
