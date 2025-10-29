@@ -64,7 +64,7 @@ const MultiStepResumeForm: React.FC = () => {
   useEffect(() => {
     const fetchResume = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.BACKEND_BASEURL}/api/resume/${id}`, {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_BASEURL}/api/resume/${id}`, {
           withCredentials: true,
         });
         setFormData((prev) => ({ ...prev, ...res.data }));
@@ -78,7 +78,7 @@ const MultiStepResumeForm: React.FC = () => {
   // Save progress (PATCH)
   const handleNext = async () => {
     try {
-      await axios.patch(`${import.meta.env.BACKEND_BASEURL}/api/resume/${id}`, formData, {
+      await axios.patch(`${import.meta.env.VITE_BACKEND_BASEURL}/api/resume/${id}`, formData, {
         withCredentials: true,
       });
       toast.success("Progress saved!");

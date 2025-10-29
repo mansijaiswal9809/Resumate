@@ -35,7 +35,7 @@ const LoginRegisterModal = ({
 
       // Call backend
       await axios.post(
-        `${import.meta.env.BACKEND_BASEURL}/api/auth/${endpoint}`,
+        `${import.meta.env.VITE_BACKEND_BASEURL}/api/auth/${endpoint}`,
         formData,
         { withCredentials: true } //  important for cookies
       );

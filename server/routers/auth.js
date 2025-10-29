@@ -73,14 +73,18 @@ router.post("/login", async (req, res) => {
       user: { id: user._id, fullName: user.fullName, email: user.email },
     });
   } catch (err) {
-    console.error(err);
+    console.error(err.message);
     res.status(500).json({ message: "Error logging in", error: err.message });
   }
 });
 
 // Get current user
 router.get("/me", protect, async (req, res) => {
-  res.status(200).json({ user: req.user });
+  try {
+    res.status(200).json({ user: req.user });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // Logout

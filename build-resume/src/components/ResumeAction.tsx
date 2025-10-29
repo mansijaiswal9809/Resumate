@@ -13,7 +13,7 @@ const ResumeLandingPage: React.FC<{ userName?: string }> = ({ userName }) => {
 
   const fetchResume = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.BACKEND_BASEURL}/api/resume`, {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_BASEURL}/api/resume`, {
         withCredentials: true,
       });
       setResumes(res.data);
@@ -25,7 +25,7 @@ const ResumeLandingPage: React.FC<{ userName?: string }> = ({ userName }) => {
   const handleCreateResume = async () => {
     try {
       const res = await axios.post(
-        `${import.meta.env.BACKEND_BASEURL}/api/resume`,
+        `${import.meta.env.VITE_BACKEND_BASEURL}/api/resume`,
         { title: resumeTitle },
         { withCredentials: true }
       );
@@ -41,7 +41,7 @@ const ResumeLandingPage: React.FC<{ userName?: string }> = ({ userName }) => {
 
   const handleDeleteResume = async (id: string) => {
     try {
-      await axios.delete(`${import.meta.env.BACKEND_BASEURL}/api/resume/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_BASEURL}/api/resume/${id}`, {
         withCredentials: true,
       });
       toast.success("Resume deleted successfully");

@@ -39,7 +39,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     await axios.post(
-      `${import.meta.env.BACKEND_BASEURL}/api/auth/logout`,
+      `${import.meta.env.VITE_BACKEND_BASEURL}/api/auth/logout`,
       {},
       { withCredentials: true }
     );
